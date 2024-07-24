@@ -50,7 +50,7 @@ __fzf_git_cat() {
   fi
 }
 
-log_format='%C(green)%C(bold)%cd %C(auto)%h%d %s %C(red)(%an)%Creset'
+GIT_LOG_FORMAT='%Cred%h -%C(auto)%d%Creset %s %C(bold)%Cgreen(%cd) %Cblue(%an)%Creset'
 
 __fzf_git_pager() {
   local pager
@@ -72,7 +72,7 @@ if [[ $# -eq 1 ]]; then
       column -ts$'\t'
   }
   hashes() {
-      git log --date=short --format="$log_format" --graph --color=$(__fzf_git_color) "$@"
+      git log --date=short --format="$GIT_LOG_FORMAT" --graph --color=$(__fzf_git_color) "$@"
   }
   case "$1" in
     branches)
@@ -203,7 +203,7 @@ _fzf_git_branches() {
     --bind 'ctrl-/:change-preview-window(70%|hidden|)' \
     --bind "ctrl-o:execute-silent:bash $__fzf_git branch {}" \
     --bind "alt-a:change-border-label( All Branches )+reload:bash \"$__fzf_git\" all-branches" \
-    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$log_format' \$(sed s/^..// <<< {} | cut -d' ' -f1) --" "$@" |
+    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$GIT_LOG_FORMAT' \$(sed s/^..// <<< {} | cut -d' ' -f1) --" "$@" |
   sed 's/^..//' | cut -d' ' -f1
 }
 
@@ -220,7 +220,7 @@ _fzf_git_all_branches() {
     --bind 'ctrl-/:change-preview-window(70%|hidden|)' \
     --bind "ctrl-o:execute-silent:bash $__fzf_git branch {}" \
     --bind "alt-a:change-border-label( All Branches )+reload:bash \"$__fzf_git\" all-branches" \
-    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$log_format' \$(sed s/^..// <<< {} | cut -d' ' -f1) --" "$@" |
+    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$GIT_LOG_FORMAT' \$(sed s/^..// <<< {} | cut -d' ' -f1) --" "$@" |
   sed 's/^..//' | cut -d' ' -f1
 }
 
@@ -257,7 +257,7 @@ _fzf_git_remotes() {
     --header $'CTRL-O (Open in Browser)' \
     --bind "ctrl-o:execute-silent:bash $__fzf_git remote {1}" \
     --preview-window right,70% \
-    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$log_format' '{1}/$(git rev-parse --abbrev-ref HEAD)' --" "$@" |
+    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$GIT_LOG_FORMAT' '{1}/$(git rev-parse --abbrev-ref HEAD)' --" "$@" |
   cut -d$'\t' -f1
 }
 
@@ -293,7 +293,7 @@ _fzf_git_each_ref() {
     --bind "ctrl-o:execute-silent:bash $__fzf_git {1} {2}" \
     --bind "alt-e:execute:${EDITOR:-vim} <(git show {2}) > /dev/tty" \
     --bind "alt-a:change-border-label( Every Ref )+reload:bash \"$__fzf_git\" all-refs" \
-    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$log_format' {2} --" "$@" |
+    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$GIT_LOG_FORMAT' {2} --" "$@" |
   awk '{print $2}'
 }
 
@@ -311,7 +311,7 @@ _fzf_git_all_refs() {
     --bind "ctrl-o:execute-silent:bash $__fzf_git {1} {2}" \
     --bind "alt-e:execute:${EDITOR:-vim} <(git show {2}) > /dev/tty" \
     --bind "alt-a:change-border-label( All Refs )+reload:bash \"$__fzf_git\" all-refs" \
-    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$log_format' {2} --" "$@" |
+    --preview "git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$GIT_LOG_FORMAT' {2} --" "$@" |
   awk '{print $2}'
 }
 
@@ -324,7 +324,7 @@ _fzf_git_worktrees() {
     --preview "
       git -c color.status=$(__fzf_git_color .) -C {1} status --short --branch
       echo
-      git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$log_format' {2} --
+      git log --oneline --graph --date=short --color=$(__fzf_git_color .) --pretty='format:$GIT_LOG_FORMAT' {2} --
     " "$@" |
   awk '{print $1}'
 }
